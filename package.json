@@ -2,9 +2,10 @@
   "name": "gitbooks",
   "version": "1.0.0",
   "description": "gitBooks &amp; More",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node --watch src/server.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,9 @@
     "pg": "^8.16.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "eslint": "^9.36.0",
+    "globals": "^16.4.0",
     "jest": "^30.1.3",
     "nodemon": "^3.1.10",
     "supertest": "^7.1.4"
