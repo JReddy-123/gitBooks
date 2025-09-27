@@ -4,41 +4,31 @@
   <meta charset="utf-8" />
   <title>GB&M – Sign up / Log in</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root{--bg:#0b1020;--brand:#5b8cff}
-    body{margin:0;background:#f7f7fb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    header{background:var(--bg);color:#fff}
-    .header-wrap{max-width:1100px;margin:0 auto;padding:10px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center}
-    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}
-    .logo{width:40px;height:40px;border-radius:8px;background:#1f2a5a;display:grid;place-items:center;font-weight:800}
-    .title{font-weight:800}
-    nav a{color:#e5e7eb;text-decoration:none;margin-left:12px;padding:8px 10px;border-radius:8px}
-    nav a:hover{background:rgba(255,255,255,.1)}
-    .wrap{max-width:860px;margin:24px auto;padding:16px}
-    .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px}
-    .tabs{display:flex;gap:8px;margin-bottom:16px}
-    .tabs button{padding:10px 14px;border:1px solid #e5e7eb;background:#fff;border-radius:10px;cursor:pointer}
-    .tabs button.active{background:var(--brand);color:#fff;border-color:var(--brand)}
-    form{display:grid;gap:10px}
-    input{padding:10px;border:1px solid #d1d5db;border-radius:10px;width:100%}
-    .btn{background:var(--brand);color:#fff;border:none;border-radius:10px;padding:10px 14px;cursor:pointer}
-    .msg{margin-top:8px;font-size:.95rem}.error{color:#b91c1c}.ok{color:#065f46}
-  </style> 
+  <link rel="stylesheet" href="styles/default.css">
+  <link rel="stylesheet" href="styles/signup.css">
 </head>
 <body>
 <header>
   <div class="header-wrap">
-    <a class="brand" href="index.html"><div class="logo">GB</div><div class="title">GitBooks & MORE</div></a>
+    <a class="brand" href="index.html">
+      <div class="logo">GB</div>
+      <div class="title">GitBooks & MORE</div>
+    </a>
     <div></div>
-    <nav><a href="marketplace.html">Marketplace</a><a href="new-listing.html">Sell an Item</a></nav>
+    <nav>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="new-listing.html">Sell an Item</a>
+    </nav>
   </div>
 </header>
 
-
 <main class="wrap">
   <div class="card">
-    <div class="tabs"><button id="tabSignup" class="active">Sign Up</button><button id="tabLogin">Log In</button></div>
-    <!-- Sign-up form: validates UNCC email, for both uncc.edu and charlotte.edu + password rules. Replace with real POST /signup later. -->
+    <div class="tabs">
+      <button id="tabSignup" class="active">Sign Up</button>
+      <button id="tabLogin">Log In</button>
+    </div>
+
     <section id="signupPanel">
       <form id="signupForm" novalidate>
         <input id="suEmail" type="email" placeholder="UNCC email" required />
@@ -48,7 +38,7 @@
         <div id="signupMsg" class="msg"></div>
       </form>
     </section>
-    <!-- Login form: basic client validation. this should tie to API but idk how doable bc we dont have uncc api. -->
+
     <section id="loginPanel" style="display:none">
       <form id="loginForm" novalidate>
         <input id="liEmail" type="email" placeholder="Email" required />
@@ -61,16 +51,25 @@
 </main>
 
 <script>
-  // tabs
-  // Switch between Sign Up and Log In panels.
-  // With a framework, this would be component state.
-  const tabSignup=document.getElementById('tabSignup'), tabLogin=document.getElementById('tabLogin');
-  const signupPanel=document.getElementById('signupPanel'), loginPanel=document.getElementById('loginPanel');
-  tabSignup.onclick=()=>{signupPanel.style.display='block';loginPanel.style.display='none';tabSignup.classList.add('active');tabLogin.classList.remove('active')}
-  tabLogin.onclick =()=>{signupPanel.style.display='none'; loginPanel.style.display='block';tabLogin.classList.add('active'); tabSignup.classList.remove('active')}
+  const tabSignup=document.getElementById('tabSignup'),
+        tabLogin=document.getElementById('tabLogin'),
+        signupPanel=document.getElementById('signupPanel'),
+        loginPanel=document.getElementById('loginPanel');
 
-  // demo handlers
-  // Allow both uncc.edu and charlotte.edu domains
+  tabSignup.onclick=()=>{
+    signupPanel.style.display='block';
+    loginPanel.style.display='none';
+    tabSignup.classList.add('active');
+    tabLogin.classList.remove('active');
+  };
+
+  tabLogin.onclick=()=>{
+    signupPanel.style.display='none';
+    loginPanel.style.display='block';
+    tabLogin.classList.add('active');
+    tabSignup.classList.remove('active');
+  };
+
   const emailRx = /@(uncc\.edu|charlotte\.edu)$/i;
 
   document.getElementById('signupForm').addEventListener('submit',e=>{
@@ -91,7 +90,7 @@
   });
 
   document.getElementById('loginForm').addEventListener('submit',e=>{
-    e.preventDefault(); 
+    e.preventDefault();
     const email=liEmail.value.trim(), p=liPass.value, msg=loginMsg;
     if(!email||!p){
       msg.textContent='Enter your email and password.';
@@ -108,6 +107,5 @@
     setTimeout(()=>location.href='marketplace.html',700);
   });
 </script>
-
 </body>
 </html>

@@ -4,60 +4,56 @@
   <meta charset="utf-8" />
   <title>GB&M – Marketplace</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root{--bg:#0b1020;--brand:#5b8cff;--muted:#6b7280}
-    body{margin:0;background:#f6f7fb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    header{background:var(--bg);color:#fff}
-    .header-wrap{max-width:1100px;margin:0 auto;padding:10px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center}
-    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}
-    .logo{width:40px;height:40px;border-radius:8px;background:#1f2a5a;display:grid;place-items:center;font-weight:800}
-    .title{font-weight:800}
-    nav a{color:#e5e7eb;text-decoration:none;margin-left:12px;padding:8px 10px;border-radius:8px}
-    nav a:hover{background:rgba(255,255,255,.1)}
-    .wrap{max-width:1100px;margin:24px auto;padding:0 16px;display:grid;grid-template-columns:260px 1fr;gap:18px}
-    .panel{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .item{background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden}
-    .thumb{aspect-ratio:16/9;background:#eef2ff;display:grid;place-items:center;color:#4f46e5;font-weight:700}
-    .content{padding:12px 14px}
-    .price{font-weight:700;margin-top:4px}
-    .badge{font-size:.75rem;border:1px solid #e5e7eb;border-radius:999px;padding:2px 8px;margin-right:6px;color:#374151}
-    .search{display:flex;gap:8px;margin-bottom:10px}
-    input,select{padding:10px;border:1px solid #d1d5db;border-radius:10px;width:100%}
-    .empty{color:var(--muted);padding:16px}
-    @media (max-width:960px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media (max-width:680px){.wrap{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
-  </style>
+  <link rel="stylesheet" href="styles/default.css">
+  <link rel="stylesheet" href="styles/marketplace.css">
 </head>
 <body>
 <header>
   <div class="header-wrap">
-    <a class="brand" href="index.html"><div class="logo">GB</div><div class="title">GitBooks & MORE</div></a>
+    <a class="brand" href="index.html">
+      <div class="logo">GB</div>
+      <div class="title">GitBooks & MORE</div>
+    </a>
     <div></div>
-    <nav><a href="new-listing.html">Sell an Item</a><a href="signup.html">Account</a></nav>
+    <nav>
+      <a href="new-listing.html">Sell an Item</a>
+      <a href="signup.html">Account</a>
+    </nav>
   </div>
 </header>
 
 <main class="wrap">
   <aside class="panel">
-    <h3 style="margin-top:0">Filters</h3>
-    <div class="search"><input id="q" placeholder="Search (e.g., calculus, TI-84, ITSC 3146)" /></div>
+    <h3 class="no-margin-top">Filters</h3>
+    <div class="search">
+      <input id="q" placeholder="Search (e.g., calculus, TI-84, ITSC 3146)" />
+    </div>
     <label>Category</label>
     <select id="cat">
-      <option value="">All</option><option>Textbooks</option><option>Calculators</option><option>Lab Kits</option><option>Other</option>
+      <option value="">All</option>
+      <option>Textbooks</option>
+      <option>Calculators</option>
+      <option>Lab Kits</option>
+      <option>Other</option>
     </select>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-      <div><label>Min ($)</label><input id="min" type="number" min="0" placeholder="0" /></div>
-      <div><label>Max ($)</label><input id="max" type="number" min="0" placeholder="999" /></div>
+    <div class="price-filters">
+      <div>
+        <label>Min ($)</label>
+        <input id="min" type="number" min="0" placeholder="0" />
+      </div>
+      <div>
+        <label>Max ($)</label>
+        <input id="max" type="number" min="0" placeholder="999" />
+      </div>
     </div>
-    <button id="clear" style="margin-top:12px;padding:10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer">Clear</button>
+    <button id="clear" class="btn-clear">Clear</button>
   </aside>
 
   <section class="panel">
-    <h2 style="margin:0 0 8px">Marketplace</h2>
+    <h2 class="no-margin-bottom">Marketplace</h2>
     <div id="count" class="empty"></div>
     <div id="grid" class="grid"></div>
-    <div id="empty" class="empty" style="display:none">No listings match your search criteria.</div>
+    <div id="empty" class="empty hidden">No listings match your search criteria.</div>
   </section>
 </main>
 
@@ -82,7 +78,7 @@
         <div class="thumb">${x.cat}</div>
         <div class="content">
           <div>${x.title}</div>
-          <div style="margin-top:6px">
+          <div class="badges">
             <span class="badge">${x.cat}</span>
             ${x.course ? `<span class="badge">${x.course}</span>`:''}
             ${x.isbn ? `<span class="badge">ISBN ${x.isbn}</span>`:''}
