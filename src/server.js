@@ -1,10 +1,11 @@
-import express from "express";
-import cors from "cors";
-import helmet from "helmet";
-import dotenv from "dotenv";
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import dotenv from 'dotenv';
 
-// Import routes
-import userRoutes from "./routes/userRoutes.js";
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import listingRoutes from './routes/listingRoutes.js';
 
 dotenv.config();
 
@@ -13,63 +14,67 @@ const PORT = process.env.PORT || 3001;
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {
-    const morganModule = await import('morgan');
-    const morgan = morganModule.default;
-    app.use(morgan('dev'));
+  const morganModule = await import('morgan');
+  const morgan = morganModule.default;
+  app.use(morgan('dev'));
 }
 
-// Basic security middleware
+// Security middleware
 app.use(helmet());
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    credentials: true
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true
 }));
 
-// Body parsing middleware
+// Body parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes (Sprint 1: Only users)
+// Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/listings', listingRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
-    res.status(200).json({ 
-        status: 'OK', 
-        message: 'Sprint 1 - User API ready!',
-        sprint: 1
-    });
+  res.status(200).json({ 
+    status: 'OK', 
+    message: 'Marketplace API ready!'
+  });
 });
 
 // 404 handler
 app.use((req, res, next) => {
-    const err = new Error('Endpoint not found');
-    err.status = 404;
-    next(err);
+  const err = new Error('Endpoint not found');
+  err.status = 404;
+  next(err);
 });
 
 // Global error handler
 app.use((error, req, res, next) => {
-    console.error('Error:', error.stack);
-    
-    if (!error.status) {
-        error.status = 500;
-        error.message = 'Internal Server Error';
-    }
-    
-    res.status(error.status).json({
-        success: false,
-        message: error.message
-    });
+  console.error('Error:', error.stack);
+  
+  if (!error.status) {
+    error.status = 500;
+    error.message = 'Internal Server Error';
+  }
+  
+  res.status(error.status).json({
+    success: false,
+    error: error.message
+  });
 });
 
-// Start server (like your blog-api)
+// Start server
 if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, () => {
-        console.log(`Sprint 1 Server running on port ${PORT}`);
-        console.log(`Health check: http://localhost:${PORT}/health`);
-        console.log(`User API: http://localhost:${PORT}/api/users/`);
-    });
+  app.listen(PORT, () => {
+    console.log(`🚀 Marketplace Server running on port ${PORT}`);
+    console.log(`📍 Health: http://localhost:${PORT}/health`);
+    console.log(`🔐 Auth: http://localhost:${PORT}/api/auth`);
+    console.log(`👤 Users: http://localhost:${PORT}/api/users`);
+    console.log(`📦 Listings: http://localhost:${PORT}/api/listings`);
+  });
 }
 
 export default app;
+

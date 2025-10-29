@@ -1,59 +1,59 @@
-import { users, getNextId } from "../db/users.js";
+import prisma from '../config/db.js';
 
-export function create(userData) {
-    const { email, password, first_name, last_name, phone } = userData;
-    const now = new Date().toISOString();
-    
-    const newUser = {
-        id: getNextId(),
-        email,
-        password,
-        first_name,
-        last_name,
-        phone: phone || null,
-        profile_image: null,
-        is_active: true,
-        created_at: now,
-        updated_at: now
-    };
-    
-    users.push(newUser);
-    
-    // Return user without password for security
-    const { password: _, ...userWithoutPassword } = newUser;
-    return userWithoutPassword;
+export async function createUser(data) {
+  return await prisma.user.create({ 
+    data,
+    omit: { password: true } 
+  });
 }
 
-export function findByEmail(email) {
-    return users.find(user => user.email === email && user.is_active === true);
+export async function findUserByEmail(email) {
+  return await prisma.user.findUnique({ 
+    where: { email, isActive: true } 
+  });
 }
 
-export function findById(id) {
-    const user = users.find(user => user.id === id && user.is_active === true);
-    if (user) {
-        // Return user without password for security
-        const { password: _, ...userWithoutPassword } = user;
-        return userWithoutPassword;
-    }
-    return null;
+export async function findAllUsers() {
+  return await prisma.user.findMany({
+    where: { isActive: true },
+    omit: { password: true },
+  });
 }
 
-export function update(id, updateData) {
-    const index = users.findIndex(user => user.id === id && user.is_active === true);
-    
-    if (index !== -1) {
-        const updatedUser = {
-            ...users[index],
-            ...updateData,
-            updated_at: new Date().toISOString()
-        };
-        
-        users[index] = updatedUser;
-        
-        // Return user without password for security
-        const { password: _, ...userWithoutPassword } = updatedUser;
-        return userWithoutPassword;
-    }
-    
-    return null;
+export async function findUserById(id) {
+  return await prisma.user.findUnique({
+    where: { id, isActive: true },
+    omit: { password: true }
+  });
+}
+
+export async function updateUser(id, data) {
+  try {
+    return await prisma.user.update({
+      where: { id },
+      data,
+      omit: { password: true }
+    });
+  } catch (error) {
+    if (error.code === 'P2025') return null;
+    throw error;
+  }
+}
+
+export async function deleteUser(id) {
+  try {
+    return await prisma.user.delete({
+      where: { id }
+    });
+  } catch (error) {
+    if (error.code === 'P2025') return null;
+    throw error;
+  }
+}
+
+export async function findListingsByUserId(userId) {
+  return await prisma.listing.findMany({
+    where: { sellerId: userId },
+    orderBy: { createdAt: 'desc' }
+  });
 }

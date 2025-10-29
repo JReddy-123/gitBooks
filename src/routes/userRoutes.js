@@ -1,20 +1,23 @@
-import express from "express";
-import { validateUserRegistration, validateUserLogin } from "../middleware/userValidators.js";
-import { register, login } from "../controllers/userController.js";
+import express from 'express';
+import { 
+  getAllUsersHandler, 
+  getCurrentUserHandler, 
+  updateCurrentUserHandler, 
+  deleteCurrentUserHandler, 
+  getCurrentUserListingsHandler,
+  updateUserRoleHandler
+} from '../controllers/userController.js';
+import { authenticate } from '../middleware/authenticate.js';
+import { authorizeRoles } from '../middleware/authorizeRoles.js';
+import { validateUpdateUser, validateUserId, validateUserRole } from '../middleware/userValidators.js';
 
 const router = express.Router();
 
-// Sprint 1: Basic authentication routes only
-router.post('/register', validateUserRegistration, register);
-router.post('/login', validateUserLogin, login);
-
-// Sprint 1: Basic test route
-router.get('/test', (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: 'Sprint 1 - User routes working!',
-        sprint: 1
-    });
-});
+router.get('/', authenticate, authorizeRoles('ADMIN'), getAllUsersHandler);
+router.get('/me', authenticate, getCurrentUserHandler);
+router.put('/me', authenticate, validateUpdateUser, updateCurrentUserHandler);
+router.delete('/me', authenticate, deleteCurrentUserHandler);
+router.get('/me/listings', authenticate, getCurrentUserListingsHandler);
+router.patch('/:id/role', authenticate, authorizeRoles('ADMIN'), validateUserId, validateUserRole, updateUserRoleHandler);
 
 export default router;
