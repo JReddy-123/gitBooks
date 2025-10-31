@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Account – GB&M</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles/default.css" />
+  <link rel="styelsheet" href="styles/account.css" />
+</head>
+<body>
+  <header>
+    <div class="header-wrap">
+      <a href="index.html" class="brand">
+        <div class="logo">GB</div>
+        <span class="title">GB&M</span>
+      </a>
+      <nav>
+        <a href="marketplace.html">Marketplace</a>
+        <a href="new-listing.html">Sell an Item</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="card account-card">
+      <h2>My Account</h2>
+      <p class="muted-text" id="welcome-text">Welcome back, John Doe</p>
+
+      <div class="profile-section" id="profile-view">
+        <div class="avatar">JD</div>
+        <div>
+          <h3 id="profile-name">John Doe</h3>
+          <p class="muted-text" id="profile-email">johndoe@email.com</p>
+        </div>
+      </div>
+
+      <form id="edit-form" style="display: none;">
+        <label>
+          <span>Name</span>
+          <input type="text" id="edit-name" value="John Doe" required>
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" id="edit-email" value="johndoe@email.com" required>
+        </label>
+        <div class="actions">
+          <button type="submit" class="btn-post cta">Save Changes</button>
+          <button type="button" id="cancel-edit" class="btn-post">Cancel</button>
+        </div>
+      </form>
+
+      <hr>
+
+      <section class="viewed-section">
+        <h2>Recently Viewed Listings</h2>
+        <div class="listing-grid">
+          <div class="listing-card">
+            <h3 class="listing-title">DSA Textbook</h3>
+            <p class="listing-desc">Algorithms (4th)</p>
+            <p class="listing-price">$35</p>
+          </div>
+
+          <div class="listing-card">
+            <h3 class="listing-title">Wireless Mouse</h3>
+            <p class="listing-desc">Logitech M720</p>
+            <p class="listing-price">$25</p>
+          </div>
+
+          <div class="listing-card">
+            <h3 class="listing-title">Graphic Calculator</h3>
+            <p class="listing-desc">TI-84 Plus CE</p>
+            <p class="listing-price">$90</p>
+          </div>
+
+          <div class="listing-card">
+            <h3 class="listing-title">Laptop Stand</h3>
+            <p class="listing-desc">Adjustable Aluminum</p>
+            <p class="listing-price">$20</p>
+          </div>
+        </div>
+      </section>
+
+      <hr>
+
+      <section class="profile-section">
+        <h2>Fields of Interest</h2>
+        <ul>
+          <li>Math</li>
+          <li>Computer Science</li>
+          <li>Ethics</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <section class="profile-section">
+        <h2>Payment Information</h2>
+        <p>Name on Card: </p>
+        <p>Card Number: </p>
+        <p>Expiration Date: </p>
+        <p>Security Code: </p>
+        <p>Billing Address: </p>
+      </section>
+
+      <div class="actions">
+        <a href="#" class="btn-post cta" id="edit-btn">Edit Profile</a>
+        <a href="#" class="btn-post" id="logout-btn">Log Out</a>
+      </div>
+    </div>
+
+<footer>© 2025 GitBooks & MORE • Student marketplace</footer>
+
+  <script src="javascript/account.js"></script>
+</body>
+</html>

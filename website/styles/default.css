@@ -81,8 +81,7 @@ nav a:hover {
 }
 
 /* Buttons */
-.btn,
-a.btn {
+.btn, a.btn {
   background: var(--brand);
   color: #fff;
   border: none;
@@ -91,4 +90,10 @@ a.btn {
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
+}
+
+footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--muted);
 }
