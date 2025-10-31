@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>GB&M – Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles/default.css">
+  <link rel="stylesheet" href="styles/index.css">
+
+</head>
+<body>
+<header>
+  <div class="header-wrap">
+    <a class="brand" href="index.html"><div class="logo">GB</div><div class="title">GitBooks & MORE</div></a>
+    <div></div>
+    <nav>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="new-listing.html">Sell an Item</a>
+      <a href="signup.html">Account</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel">
+    <div class="heading">
+      <h2 style="margin:0">My Listings</h2>
+      <span id="count" class="muted"></span>
+    </div>
+    <div id="list" class="grid"></div>
+    <div id="empty" class="muted" style="display:none">You have no listings yet.</div>
+  </section>
+</main>
+
+<script>
+
+(function seed(){
+  if(!localStorage.getItem('gbmo_currentUserId')) localStorage.setItem('gbmo_currentUserId','42');
+  if(!localStorage.getItem('gbmo_listings')){
+    const sample=[
+      {id:201, ownerId:44, title:'Data Structures & Algorithms (4th)', cat:'Textbooks', price:35, isbn:'9780134685991', course:'ITSC 2214', desc:'Great condition.'},
+      {id:202, ownerId:44, title:'TI-84 Plus CE Calculator', cat:'Calculators', price:45, isbn:'', course:'', desc:'Like new, includes case.'},
+      {id:203, ownerId:7,  title:'Physics 1101 Lab Kit', cat:'Lab Kits', price:20, isbn:'', course:'PHYS 1101', desc:'Extra kit.'}
+    ];
+    localStorage.setItem('gbmo_listings', JSON.stringify(sample));
+  }
+})();
+
+const currentUserId = Number(localStorage.getItem('gbmo_currentUserId'));
+function getListings(){ return JSON.parse(localStorage.getItem('gbmo_listings')||'[]'); }
+function setListings(arr){ localStorage.setItem('gbmo_listings', JSON.stringify(arr)); }
+
+const listEl = document.getElementById('list');
+const emptyEl= document.getElementById('empty');
+const countEl= document.getElementById('count');
+
+function render(){
+  const mine = getListings().filter(x=>x.ownerId===currentUserId);
+  countEl.textContent = `${mine.length} listing${mine.length!==1?'s':''}`;
+  emptyEl.style.display = mine.length? 'none' : 'block';
+  listEl.innerHTML = mine.map(x=>`
+    <article class="card">
+      <div class="thumb">${x.cat || 'Item'}</div>
+      <div class="content">
+        <div style="font-weight:600">${x.title}</div>
+        <div class="row">
+          ${x.cat? `<span class="chip">${x.cat}</span>`:''}
+          ${x.course? `<span class="chip">${x.course}</span>`:''}
+          ${x.isbn? `<span class="chip">ISBN ${x.isbn}</span>`:''}
+        </div>
+        <div class="price">$${Number(x.price).toFixed(2)}</div>
+        <div class="actions">
+          <a class="btn"    href="edit-listing.html?id=${x.id}">Edit</a>
+          <a class="btn danger" href="delete-listing.html?id=${x.id}">Delete</a>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
+render();
+</script>
+</body>
+</html>
