@@ -6,9 +6,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="styles/default.css">
   <link rel="stylesheet" href="styles/index.css">
+  <script src="javascript/api.js"></script>
 
 </head>
 <body>
+  <script src="javascript/api.js"></script>
+<script>
+  // Update navigation based on auth status
+  document.addEventListener('DOMContentLoaded', () => {
+    const nav = document.querySelector('nav');
+    if (API.isAuthenticated()) {
+      const user = API.getCurrentUser();
+      // Update Account link
+      const accountLink = nav.querySelector('a[href="signup.html"]');
+      if (accountLink) {
+        accountLink.textContent = `Hi, ${user.firstName}`;
+        accountLink.href = 'account.html';
+      }
+      // Add Logout option
+      const logoutLink = document.createElement('a');
+      logoutLink.href = '#';
+      logoutLink.textContent = 'Logout';
+      logoutLink.style.color = '#ef4444';
+      logoutLink.onclick = (e) => {
+        e.preventDefault();
+        if (confirm('Are you sure you want to logout?')) {
+          API.logout();
+        }
+      };
+      nav.appendChild(logoutLink);
+    }
+  });
+</script>
 <header>
   <div class="header-wrap">
     <a class="brand" href="index.html" aria-label="GitBooks & MORE Home">
