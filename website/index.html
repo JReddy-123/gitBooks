@@ -7,82 +7,44 @@
   <link rel="stylesheet" href="styles/default.css">
   <link rel="stylesheet" href="styles/index.css">
   <script src="javascript/api.js"></script>
-
 </head>
 <body>
-  <script src="javascript/api.js"></script>
-<script>
-  // Update navigation based on auth status
-  document.addEventListener('DOMContentLoaded', () => {
-    const nav = document.querySelector('nav');
-    if (API.isAuthenticated()) {
-      const user = API.getCurrentUser();
-      // Update Account link
-      const accountLink = nav.querySelector('a[href="signup.html"]');
-      if (accountLink) {
-        accountLink.textContent = `Hi, ${user.firstName}`;
-        accountLink.href = 'account.html';
-      }
-      // Add Logout option
-      const logoutLink = document.createElement('a');
-      logoutLink.href = '#';
-      logoutLink.textContent = 'Logout';
-      logoutLink.style.color = '#ef4444';
-      logoutLink.onclick = (e) => {
-        e.preventDefault();
-        if (confirm('Are you sure you want to logout?')) {
-          API.logout();
-        }
-      };
-      nav.appendChild(logoutLink);
-    }
-  });
-</script>
-<header>
-  <div class="header-wrap">
-    <a class="brand" href="index.html" aria-label="GitBooks & MORE Home">
-      <div class="logo">GB</div>
-      <div class="title">GitBooks & MORE</div>
-    </a>
-    <div></div>
-    <nav>
-      <a href="marketplace.html">Marketplace</a>
-      <a href="new-listing.html">Sell an Item</a>
-      <a href="signup.html">Account</a>
-      <a class="cta" href="marketplace.html">Browse Deals</a>
-    </nav>
-  </div>
-</header>
-
-<main class="hero">
-  <section class="card">
-    <h1 class="hero-heading">Buy & sell textbooks, calculators, and supplies—student to student.</h1>
-    <p class="muted-text">Save money with direct listings from UNC Charlotte students and alumni. Post items in minutes, discover deals,
-      and keep essentials in circulation on campus.</p>
-    <p>
-      <a class="cta btn-post" href="new-listing.html">Post a Listing</a>
-    </p>
-  </section>
-
-  <aside class="card">
-    <h3 class="no-margin-top">Featured</h3>
-    <div class="grid">
-      <article class="item">
-        <div class="thumb">DSA Textbook</div>
-        <div class="content"><div>Algorithms (4th)</div><div class="price">$35</div></div>
-      </article>
-      <article class="item">
-        <div class="thumb">TI-84 Plus</div>
-        <div class="content"><div>Calculator</div><div class="price">$45</div></div>
-      </article>
-      <article class="item">
-        <div class="thumb">Lab Kit</div>
-        <div class="content"><div>Physics 1101</div><div class="price">$20</div></div>
-      </article>
+  <header>
+    <div class="header-wrap">
+      <a class="brand" href="index.html" aria-label="GitBooks & MORE Home">
+        <div class="logo">GB</div>
+        <div class="title">GitBooks & MORE</div>
+      </a>
+      <div></div>
+      <nav id="main-nav">
+        <a href="marketplace.html">Marketplace</a>
+        <a href="new-listing.html">Sell an Item</a>
+        <a href="signup.html" id="account-link">Account</a>
+        <a class="cta" href="marketplace.html">Browse Deals</a>
+      </nav>
     </div>
-  </aside>
-</main>
+  </header>
 
-<footer>© 2025 GitBooks & MORE • Student marketplace</footer>
+  <main class="hero">
+    <section class="card">
+      <h1 class="hero-heading">Buy & sell textbooks, calculators, and supplies—student to student.</h1>
+      <p class="muted-text">Save money with direct listings from UNC Charlotte students and alumni. Post items in minutes, discover deals,
+        and keep essentials in circulation on campus.</p>
+      <p>
+        <a class="cta btn-post" href="new-listing.html">Post a Listing</a>
+      </p>
+    </section>
+
+    <aside class="card">
+      <h3 class="no-margin-top">Featured Listings</h3>
+      <div class="grid" id="featured-listings">
+        <p class="muted-text" style="grid-column: 1/-1; text-align: center;">Loading featured listings...</p>
+      </div>
+    </aside>
+  </main>
+
+  <footer>© 2025 GitBooks & MORE • Student marketplace</footer>
+
+  <script src="javascript/index.js"></script>
 </body>
 </html>

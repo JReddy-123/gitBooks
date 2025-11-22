@@ -3,6 +3,29 @@ if (!API.requireAuth()) {
   // User will be redirected to signup page
 }
 
+// Helper function for user-friendly error messages
+function getErrorMessage(error) {
+  const message = error.message || 'An error occurred';
+  
+  const errorMappings = {
+    'Email already in use': 'This email is already being used by another account',
+    'Password must be between 8 and 64 characters': 'Password must be at least 8 characters long',
+    'Email is not valid': 'Please enter a valid email address',
+    'Phone number is not valid': 'Please enter a valid phone number',
+    'User not found': 'Account not found',
+    'Not authenticated': 'Please log in again',
+    'Cannot connect to server': 'Unable to connect. Please check your connection.',
+  };
+  
+  for (const [pattern, friendlyMessage] of Object.entries(errorMappings)) {
+    if (message.includes(pattern)) {
+      return friendlyMessage;
+    }
+  }
+  
+  return message;
+}
+
 // DOM Elements
 const editBtn = document.getElementById("edit-btn");
 const editForm = document.getElementById("edit-form");
@@ -39,8 +62,12 @@ async function loadProfile() {
     
   } catch (error) {
     console.error('Failed to load profile:', error);
-    alert('Failed to load profile. Please try logging in again.');
-    API.logout();
+    alert(getErrorMessage(error));
+    
+    // If unauthorized, redirect to login
+    if (error.status === 401) {
+      API.logout();
+    }
   }
 }
 
@@ -54,7 +81,7 @@ async function loadUserListings() {
     if (!listingGrid) return;
     
     if (listings.length === 0) {
-      listingGrid.innerHTML = '<p class="muted-text">You haven\'t posted any listings yet.</p>';
+      listingGrid.innerHTML = '<p class="muted-text">You haven\'t posted any listings yet. <a href="new-listing.html">Create your first listing</a></p>';
       return;
     }
     
@@ -93,19 +120,22 @@ async function loadUserListings() {
     
   } catch (error) {
     console.error('Failed to load listings:', error);
+    const listingGrid = document.querySelector('.listing-grid');
+    if (listingGrid) {
+      listingGrid.innerHTML = `<p class="muted-text" style="color: #dc2626;">Unable to load listings: ${getErrorMessage(error)}</p>`;
+    }
   }
 }
 
 // Edit listing
 function editListing(id) {
-  // For now, redirect to edit page (you'd need to create this)
-  alert(`Edit functionality for listing ${id} coming soon!`);
-  // window.location.href = `edit-listing.html?id=${id}`;
+  // Redirect to manage-listings page where editing is handled
+  window.location.href = `manage-listings.html`;
 }
 
 // Delete listing
 async function deleteListing(id) {
-  if (!confirm('Are you sure you want to delete this listing?')) {
+  if (!confirm('Are you sure you want to delete this listing? This cannot be undone.')) {
     return;
   }
   
@@ -114,7 +144,8 @@ async function deleteListing(id) {
     alert('Listing deleted successfully!');
     await loadUserListings(); // Reload listings
   } catch (error) {
-    alert('Failed to delete listing. Please try again.');
+    console.error('Failed to delete listing:', error);
+    alert(`Failed to delete listing: ${getErrorMessage(error)}`);
   }
 }
 
@@ -159,6 +190,22 @@ editForm.addEventListener("submit", async (e) => {
   const newPassword = document.getElementById('edit-password')?.value;
   const newPhone = document.getElementById('edit-phone')?.value.trim();
   
+  // Validation
+  if (!firstName || !lastName) {
+    alert('Please enter both first and last name');
+    return;
+  }
+  
+  if (!newEmail) {
+    alert('Email is required');
+    return;
+  }
+  
+  if (newPassword && newPassword.length < 8) {
+    alert('Password must be at least 8 characters long');
+    return;
+  }
+  
   // Build update object
   const updates = {};
   
@@ -179,6 +226,7 @@ editForm.addEventListener("submit", async (e) => {
   try {
     // Show loading state
     const saveBtn = editForm.querySelector('button[type="submit"]');
+    const originalText = saveBtn.textContent;
     saveBtn.textContent = 'Saving...';
     saveBtn.disabled = true;
     
@@ -203,14 +251,14 @@ editForm.addEventListener("submit", async (e) => {
     editBtn.style.display = "inline-block";
     
     // Reset button state
-    saveBtn.textContent = 'Save Changes';
+    saveBtn.textContent = originalText;
     saveBtn.disabled = false;
     
     alert('Profile updated successfully!');
     
   } catch (error) {
     console.error('Failed to update profile:', error);
-    alert(error.message || 'Failed to update profile. Please try again.');
+    alert(`Failed to update profile: ${getErrorMessage(error)}`);
     
     // Reset button state
     const saveBtn = editForm.querySelector('button[type="submit"]');
