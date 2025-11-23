@@ -26,26 +26,43 @@ export async function signUp({ email, password, firstName, lastName, phone }) {
     
     return { user: newUser, accessToken };
   } catch (error) {
-    if (error instanceof PrismaClientKnownRequestError) {
-      if (error.code === 'P2002') {
-        // Check which field caused the unique constraint violation
-        const field = error.meta?.target?.[0];
-        
-        if (field === 'email') {
-          const err = new Error('Email already in use');
-          err.status = 409;
-          throw err;
-        } else if (field === 'phone') {
-          const err = new Error('Phone number already in use');
-          err.status = 409;
-          throw err;
-        } else {
-          const err = new Error('This information is already registered');
-          err.status = 409;
-          throw err;
-        }
+    console.error('SignUp Error Details:', {
+      name: error.constructor.name,
+      code: error.code,
+      meta: error.meta,
+      message: error.message
+    });
+
+    // Check if it's a Prisma error
+    if (error.constructor.name === 'PrismaClientKnownRequestError' || error.code === 'P2002') {
+      // Unique constraint violation
+      const target = error.meta?.target;
+      let field;
+      
+      if (Array.isArray(target)) {
+        field = target[0];
+      } else if (typeof target === 'string') {
+        field = target;
+      }
+      
+      console.log('Constraint violation on field:', field);
+      
+      if (field === 'email') {
+        const err = new Error('Email already in use');
+        err.status = 409;
+        throw err;
+      } else if (field === 'phone') {
+        const err = new Error('Phone number already in use');
+        err.status = 409;
+        throw err;
+      } else {
+        const err = new Error('This information is already registered');
+        err.status = 409;
+        throw err;
       }
     }
+    
+    // Re-throw if not a duplicate error
     throw error;
   }
 }
