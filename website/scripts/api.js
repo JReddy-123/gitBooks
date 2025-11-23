@@ -34,8 +34,7 @@ class APIClient {
     return !!this.getToken();
   }
 
-  // ==================== Base Fetch Method ====================
-  
+  // ==================== API Requests ====================  
   static async fetchAPI(endpoint, options = {}) {
     const token = this.getToken();
     

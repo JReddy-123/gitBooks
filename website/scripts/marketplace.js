@@ -140,10 +140,19 @@ function renderListings(listings) {
     const seller = listing.seller ? 
       `${listing.seller.firstName} ${listing.seller.lastName}` : 
       'Unknown Seller';
+    
+    // Get image or use placeholder
+    const hasImage = listing.images && listing.images.length > 0;
+    const imageUrl = hasImage ? listing.images[0] : '';
 
     return `
       <article class="listing-card" onclick="viewListing(${listing.id})">
-        <div class="listing-thumb">${category}</div>
+        <div class="listing-thumb ${hasImage ? 'has-image' : ''}">
+          ${hasImage ? 
+            `<img src="${imageUrl}" alt="${escapeHtml(listing.title)}" class="listing-image">` : 
+            `<span class="category-text">${category}</span>`
+          }
+        </div>
         <div class="listing-body">
           <h3 class="listing-title">${escapeHtml(listing.title)}</h3>
           <div class="listing-badges">
@@ -175,9 +184,19 @@ async function viewListing(id) {
       'Unknown Seller';
     const sellerEmail = listing.seller?.email || 'N/A';
     const sellerPhone = listing.seller?.phone || 'N/A';
+    
+    // Get image or use placeholder
+    const hasImage = listing.images && listing.images.length > 0;
+    const imageUrl = hasImage ? listing.images[0] : '';
 
     const modalContent = `
       <div class="listing-detail">
+        ${hasImage ? `
+          <div class="listing-detail-image">
+            <img src="${imageUrl}" alt="${escapeHtml(listing.title)}" style="width: 100%; max-height: 400px; object-fit: contain; border-radius: 10px; margin-bottom: 20px;">
+          </div>
+        ` : ''}
+        
         <div class="listing-detail-header">
           <h2 style="margin: 0 0 12px;">${escapeHtml(listing.title)}</h2>
           <div class="listing-badges mb-16">

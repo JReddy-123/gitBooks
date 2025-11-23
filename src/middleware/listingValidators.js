@@ -115,11 +115,19 @@ export const validateCreateListing = [
     .withMessage('Maximum 5 images allowed'),
 
   body('images.*')
-    .optional()
-    .isURL()
-    .withMessage('Each image must be a valid URL'),
-
-  handleValidationErrors,
+  .optional()
+  .custom((value) => {
+    // Allow regular URLs (http:// or https://)
+    if (value.startsWith('http://') || value.startsWith('https://')) {
+      return true;
+    }
+    // Allow base64 data URLs (data:image/...)
+    if (value.startsWith('data:image/')) {
+      return true;
+    }
+    return false;
+  })
+  .withMessage('Each image must be a valid URL or base64 data URL'),
 ];
 
 export const validateUpdateListing = [
@@ -180,9 +188,19 @@ export const validateUpdateListing = [
     .withMessage('Maximum 5 images allowed'),
 
   body('images.*')
-    .optional()
-    .isURL()
-    .withMessage('Each image must be a valid URL'),
+  .optional()
+  .custom((value) => {
+    // Allow regular URLs (http:// or https://)
+    if (value.startsWith('http://') || value.startsWith('https://')) {
+      return true;
+    }
+    // Allow base64 data URLs (data:image/...)
+    if (value.startsWith('data:image/')) {
+      return true;
+    }
+    return false;
+  })
+  .withMessage('Each image must be a valid URL or base64 data URL'),
 
   body('isAvailable')
     .optional()

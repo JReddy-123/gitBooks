@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   attachEventListeners();
 });
 
+// Attach event listeners
 function attachEventListeners() {
   document.getElementById('editProfileBtn').addEventListener('click', showEditForm);
   document.getElementById('cancelEditBtn').addEventListener('click', hideEditForm);
@@ -53,6 +54,7 @@ async function loadProfile() {
   }
 }
 
+// Load user's listings
 async function loadUserListings() {
   const container = document.getElementById('userListings');
   const emptyState = document.getElementById('emptyListings');
@@ -76,9 +78,19 @@ async function loadUserListings() {
       const price = Utils.formatPrice(listing.price);
       const category = Utils.formatCategory(listing.category);
       const condition = Utils.formatCondition(listing.condition);
+      
+      // Get image or use placeholder
+      const hasImage = listing.images && listing.images.length > 0;
+      const imageUrl = hasImage ? listing.images[0] : '';
 
       return `
         <div class="user-listing-card">
+          ${hasImage ? `
+            <div class="listing-image-preview">
+              <img src="${imageUrl}" alt="${escapeHtml(listing.title)}" style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 12px;">
+            </div>
+          ` : ''}
+          
           <div class="listing-header">
             <div class="listing-title-group">
               <h4>${escapeHtml(listing.title)}</h4>
@@ -123,12 +135,14 @@ async function loadUserListings() {
   }
 }
 
+// Show edit profile form
 function showEditForm() {
   document.getElementById('profileView').classList.add('hidden');
   document.getElementById('editProfileForm').classList.remove('hidden');
   document.getElementById('editProfileBtn').classList.add('hidden');
 }
 
+// Hide edit profile form
 function hideEditForm() {
   document.getElementById('profileView').classList.remove('hidden');
   document.getElementById('editProfileForm').classList.add('hidden');
@@ -145,6 +159,7 @@ function hideEditForm() {
   }
 }
 
+// Handle profile update
 async function handleProfileUpdate(e) {
   e.preventDefault();
 
