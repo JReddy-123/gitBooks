@@ -2,6 +2,10 @@ import { describe, test, expect, jest, beforeAll, beforeEach } from '@jest/globa
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+// ✅ SET ENVIRONMENT VARIABLES FIRST (before any imports that use them)
+process.env.JWT_SECRET = 'test-secret-key-123';
+process.env.JWT_EXPIRES_IN = '1h';
+
 // Mock the repository before importing authService
 const mockCreateUser = jest.fn();
 const mockFindUserByEmail = jest.fn();
@@ -21,12 +25,12 @@ class MockPrismaError extends Error {
   }
 }
 
-// Now import authService (after mocking)
+// Now import authService (after setting env vars and mocking)
 const { signUp, logIn } = await import('../../../src/services/authService.js');
 
+// You can remove this beforeAll now (or keep it, doesn't matter)
 beforeAll(() => {
-  process.env.JWT_SECRET = 'test-secret-key-123';
-  process.env.JWT_EXPIRES_IN = '1h';
+  // Already set above
 });
 
 beforeEach(() => {
