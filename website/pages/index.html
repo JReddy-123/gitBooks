@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitBooks & More - Student Marketplace</title>
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/home.css">
+</head>
+<body>
+  <header>
+    <div class="header-wrap">
+      <a href="index.html" class="brand">
+        <div class="logo">GB</div>
+        <span class="title">GitBooks & MORE</span>
+      </a>
+      <div></div>
+      <nav>
+        <a href="marketplace.html">Marketplace</a>
+        <a href="new-listing.html">Sell an Item</a>
+        <a href="signup.html">Account</a>
+        <a href="marketplace.html" class="cta">Browse Deals</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="hero">
+    <section class="card hero-card">
+      <h1 class="hero-heading">Buy & sell textbooks, calculators, and supplies—student to student.</h1>
+      <p class="text-muted hero-text">
+        Save money with direct listings from UNC Charlotte students and alumni. 
+        Post items in minutes, discover deals, and keep essentials in circulation on campus.
+      </p>
+      <p>
+        <a class="btn cta" href="new-listing.html">Post a Listing</a>
+      </p>
+    </section>
+
+    <aside class="card featured-card">
+      <h3 class="no-margin-top">Featured Listings</h3>
+      <div id="featuredGrid" class="featured-grid">
+        <div class="skeleton-item"></div>
+        <div class="skeleton-item"></div>
+        <div class="skeleton-item"></div>
+      </div>
+    </aside>
+  </main>
+
+  <footer>© 2025 GitBooks & MORE • Student marketplace</footer>
+
+  <script src="../scripts/api.js"></script>
+  <script src="../scripts/utils.js"></script>
+  <script>
+    // Update navigation based on auth state
+    document.addEventListener('DOMContentLoaded', () => {
+      Utils.updateNavigation();
+      loadFeaturedListings();
+    });
+
+    // Load featured listings
+    async function loadFeaturedListings() {
+      const grid = document.getElementById('featuredGrid');
+      
+      try {
+        const result = await API.getListings({ limit: 3, sortBy: 'createdAt', sortOrder: 'desc' });
+        const listings = result.data || [];
+        
+        if (listings.length === 0) {
+          grid.innerHTML = '<p class="text-muted">No listings yet. Be the first to post!</p>';
+          return;
+        }
+        
+        grid.innerHTML = listings.map(listing => {
+          const price = Utils.formatPrice(listing.price);
+          const category = Utils.formatCategory(listing.category);
+          
+          return `
+            <article class="featured-item" onclick="window.location.href='marketplace.html'">
+              <div class="featured-thumb">${category}</div>
+              <div class="featured-content">
+                <div class="featured-title">${listing.title}</div>
+                <div class="featured-price">$${price}</div>
+              </div>
+            </article>
+          `;
+        }).join('');
+        
+      } catch (error) {
+        console.error('Failed to load featured listings:', error);
+        grid.innerHTML = '<p class="text-muted">Unable to load listings</p>';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up / Log In - GitBooks & More</title>
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/auth.css">
+</head>
+<body>
+  <header>
+    <div class="header-wrap">
+      <a href="index.html" class="brand">
+        <div class="logo">GB</div>
+        <span class="title">GitBooks & MORE</span>
+      </a>
+      <div></div>
+      <nav>
+        <a href="marketplace.html">Marketplace</a>
+        <a href="new-listing.html">Sell an Item</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="auth-wrap">
+    <div class="card auth-card">
+      <div class="tabs">
+        <button id="tabSignup" class="tab-btn active">Sign Up</button>
+        <button id="tabLogin" class="tab-btn">Log In</button>
+      </div>
+
+      <!-- Sign Up Form -->
+      <div id="signupPanel" class="auth-panel">
+        <form id="signupForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="suFirstName">First Name *</label>
+              <input 
+                type="text" 
+                id="suFirstName" 
+                required 
+                autocomplete="given-name"
+              >
+            </div>
+            <div class="form-group">
+              <label for="suLastName">Last Name *</label>
+              <input 
+                type="text" 
+                id="suLastName" 
+                required 
+                autocomplete="family-name"
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="suEmail">UNCC Email *</label>
+            <input 
+              type="email" 
+              id="suEmail" 
+              required 
+              placeholder="your.name@student.edu"
+              autocomplete="email"
+            >
+            <small class="text-muted">Use your @uncc.edu, @charlotte.edu, or @student.edu email</small>
+          </div>
+
+          <div class="form-group">
+            <label for="suPhone">Phone Number (optional)</label>
+            <input 
+              type="tel" 
+              id="suPhone" 
+              placeholder="+1 (555) 123-4567"
+              autocomplete="tel"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="suPassword">Password *</label>
+            <input 
+              type="password" 
+              id="suPassword" 
+              required 
+              minlength="8"
+              autocomplete="new-password"
+            >
+            <small class="text-muted">At least 8 characters</small>
+          </div>
+
+          <div class="form-group">
+            <label for="suPassword2">Confirm Password *</label>
+            <input 
+              type="password" 
+              id="suPassword2" 
+              required 
+              minlength="8"
+              autocomplete="new-password"
+            >
+          </div>
+
+          <button type="submit" class="btn" style="width: 100%;">
+            Create Account
+          </button>
+
+          <div id="signupMsg" class="msg hidden"></div>
+        </form>
+      </div>
+
+      <!-- Log In Form -->
+      <div id="loginPanel" class="auth-panel hidden">
+        <form id="loginForm" novalidate>
+          <div class="form-group">
+            <label for="liEmail">Email *</label>
+            <input 
+              type="email" 
+              id="liEmail" 
+              required 
+              placeholder="your.name@student.edu"
+              autocomplete="email"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="liPassword">Password *</label>
+            <input 
+              type="password" 
+              id="liPassword" 
+              required 
+              autocomplete="current-password"
+            >
+          </div>
+
+          <button type="submit" class="btn" style="width: 100%;">
+            Log In
+          </button>
+
+          <div id="loginMsg" class="msg hidden"></div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer>© 2025 GitBooks & MORE • Student marketplace</footer>
+
+  <script src="../scripts/api.js"></script>
+  <script src="../scripts/utils.js"></script>
+  <script src="../scripts/auth.js"></script>
+</body>
+</html>

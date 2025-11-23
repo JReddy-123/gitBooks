@@ -1,35 +1,41 @@
-// API Configuration
+/**
+ * API Client for GitBooks & More
+ * Handles all communication with the backend API
+ */
+
 const API_BASE_URL = 'http://localhost:3001/api';
 
-// Token management
 const TOKEN_KEY = 'gbm_token';
 const USER_KEY = 'gbm_user';
 
-class APIClass {
-  // Get stored token
+class APIClient {
+  // ==================== Token Management ====================
+  
   static getToken() {
     return localStorage.getItem(TOKEN_KEY);
   }
 
-  // Store token and user data
   static setAuth(token, user) {
     localStorage.setItem(TOKEN_KEY, token);
     localStorage.setItem(USER_KEY, JSON.stringify(user));
   }
 
-  // Clear authentication
   static clearAuth() {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
   }
 
-  // Get current user
   static getCurrentUser() {
     const userStr = localStorage.getItem(USER_KEY);
     return userStr ? JSON.parse(userStr) : null;
   }
 
-  // Base fetch wrapper with auth headers and improved error handling
+  static isAuthenticated() {
+    return !!this.getToken();
+  }
+
+  // ==================== Base Fetch Method ====================
+  
   static async fetchAPI(endpoint, options = {}) {
     const token = this.getToken();
     
@@ -49,12 +55,10 @@ class APIClass {
     try {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
       
-      // Try to parse response as JSON
       let data;
       try {
         data = await response.json();
       } catch (parseError) {
-        // If JSON parsing fails, create a generic error object
         data = { 
           success: false, 
           error: `Server error (${response.status})` 
@@ -62,19 +66,19 @@ class APIClass {
       }
 
       if (!response.ok) {
-        // Extract error message from different possible formats
         let errorMessage = data.error || data.message || 'Request failed';
         
-        // If there are validation errors, combine them
         if (data.errors && Array.isArray(data.errors)) {
           errorMessage = data.errors.join(', ');
         }
         
-        // Add status code context for common errors
+        // Add status code context
         if (response.status === 400) {
           errorMessage = `Validation error: ${errorMessage}`;
         } else if (response.status === 401) {
           errorMessage = errorMessage || 'Invalid credentials';
+          // Clear auth on 401
+          this.clearAuth();
         } else if (response.status === 403) {
           errorMessage = errorMessage || 'Access denied';
         } else if (response.status === 404) {
@@ -95,7 +99,6 @@ class APIClass {
 
       return data;
     } catch (error) {
-      // Log error for debugging
       console.error('API Error:', {
         endpoint,
         message: error.message,
@@ -103,7 +106,6 @@ class APIClass {
         data: error.data
       });
       
-      // Re-throw with better message if it's a network error
       if (error.message === 'Failed to fetch') {
         const networkError = new Error(
           'Cannot connect to server. Please check if the backend is running on port 3001.'
@@ -116,7 +118,8 @@ class APIClass {
     }
   }
 
-  // ============== AUTH ENDPOINTS ==============
+  // ==================== Auth Endpoints ====================
+  
   static async signup(email, password, firstName, lastName, phone = null) {
     const result = await this.fetchAPI('/auth/signup', {
       method: 'POST',
@@ -143,19 +146,28 @@ class APIClass {
 
   static logout() {
     this.clearAuth();
-    window.location.href = '/index.html';
+    window.location.href = '/pages/index.html';
   }
 
-  // ============== USER ENDPOINTS ==============
+  // ==================== User Endpoints ====================
+  
   static async getProfile() {
     return await this.fetchAPI('/users/me');
   }
 
   static async updateProfile(updates) {
-    return await this.fetchAPI('/users/me', {
+    const result = await this.fetchAPI('/users/me', {
       method: 'PUT',
       body: JSON.stringify(updates)
     });
+    
+    // Update stored user data
+    if (result.data) {
+      const currentToken = this.getToken();
+      this.setAuth(currentToken, result.data);
+    }
+    
+    return result;
   }
 
   static async deleteAccount() {
@@ -169,7 +181,8 @@ class APIClass {
     return await this.fetchAPI('/users/me/listings');
   }
 
-  // ============== LISTING ENDPOINTS ==============
+  // ==================== Listing Endpoints ====================
+  
   static async getListings(filters = {}) {
     const params = new URLSearchParams();
     
@@ -213,19 +226,37 @@ class APIClass {
     });
   }
 
-  // ============== HELPER METHODS ==============
-  static isAuthenticated() {
-    return !!this.getToken();
-  }
-
+  // ==================== Helper Methods ====================
+  
   static requireAuth() {
     if (!this.isAuthenticated()) {
-      window.location.href = '/signup.html';
+      window.location.href = '/pages/signup.html';
       return false;
     }
     return true;
   }
+
+  static getErrorMessage(error) {
+    const message = error.message || 'An error occurred';
+    
+    const errorMappings = {
+      'Listing not found': 'This listing no longer exists',
+      'Forbidden': 'You do not have permission to perform this action',
+      'Not authenticated': 'Please log in again',
+      'Cannot connect to server': 'Unable to connect to the server. Please check if the backend is running.',
+      'Email already in use': 'This email is already registered',
+      'Invalid credentials': 'Incorrect email or password',
+    };
+    
+    for (const [pattern, friendlyMessage] of Object.entries(errorMappings)) {
+      if (message.includes(pattern)) {
+        return friendlyMessage;
+      }
+    }
+    
+    return message;
+  }
 }
 
 // Export for use in other files
-window.API = APIClass;
+window.API = APIClient;

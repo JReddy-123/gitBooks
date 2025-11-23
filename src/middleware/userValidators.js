@@ -36,9 +36,12 @@ export const validateUser = [
     .withMessage('Last name cannot be empty'),
   
   body('phone')
-    .optional()
-    .isMobilePhone()
-    .withMessage('Phone number is not valid'),
+  .optional({ values: 'falsy' })
+  .custom((value) => {
+    if (!value || value === '') return true;
+    return /^[+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/.test(value);
+  })
+  .withMessage('Phone number is not valid'),
 
   handleValidationErrors,
 ];

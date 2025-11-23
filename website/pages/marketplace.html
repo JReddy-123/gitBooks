@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace - GitBooks & More</title>
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/marketplace.css">
+</head>
+<body>
+  <header>
+    <div class="header-wrap">
+      <a href="index.html" class="brand">
+        <div class="logo">GB</div>
+        <span class="title">GitBooks & MORE</span>
+      </a>
+      <div></div>
+      <nav>
+        <a href="new-listing.html">Sell an Item</a>
+        <a href="signup.html">Account</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="marketplace-wrap">
+    <aside class="filters-panel panel">
+      <h3 class="no-margin-top">Filters</h3>
+      
+      <div class="filter-group">
+        <label for="searchInput">Search</label>
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search listings..."
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="filter-group">
+        <label for="categorySelect">Category</label>
+        <select id="categorySelect">
+          <option value="">All Categories</option>
+          <option value="TEXTBOOKS">Textbooks</option>
+          <option value="ELECTRONICS">Electronics</option>
+          <option value="FURNITURE">Furniture</option>
+          <option value="CLOTHING">Clothing</option>
+          <option value="SCHOOL_SUPPLIES">School Supplies</option>
+          <option value="OTHER">Other</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="conditionSelect">Condition</label>
+        <select id="conditionSelect">
+          <option value="">Any Condition</option>
+          <option value="NEW">New</option>
+          <option value="LIKE_NEW">Like New</option>
+          <option value="GOOD">Good</option>
+          <option value="FAIR">Fair</option>
+          <option value="USED">Used</option>
+        </select>
+      </div>
+
+      <div class="filter-row">
+        <div class="filter-group">
+          <label for="minPrice">Min Price ($)</label>
+          <input 
+            type="number" 
+            id="minPrice" 
+            min="0" 
+            step="0.01" 
+            placeholder="0"
+          >
+        </div>
+        <div class="filter-group">
+          <label for="maxPrice">Max Price ($)</label>
+          <input 
+            type="number" 
+            id="maxPrice" 
+            min="0" 
+            step="0.01" 
+            placeholder="999"
+          >
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label for="sortBy">Sort By</label>
+        <select id="sortBy">
+          <option value="createdAt">Newest First</option>
+          <option value="price">Price: Low to High</option>
+          <option value="title">Title: A-Z</option>
+        </select>
+      </div>
+
+      <button id="clearFilters" class="btn btn-outline" style="width: 100%;">
+        Clear Filters
+      </button>
+    </aside>
+
+    <section class="listings-panel panel">
+      <div class="flex-between mb-16">
+        <h2 class="no-margin-top no-margin-bottom">Marketplace</h2>
+        <span id="listingCount" class="text-muted">Loading...</span>
+      </div>
+      
+      <div id="listingsGrid" class="grid">
+        <!-- Skeleton loaders -->
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+
+      <div id="emptyState" class="empty-state hidden">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p>No listings found matching your criteria</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2025 GitBooks & MORE • Student marketplace</footer>
+
+  <script src="../scripts/api.js"></script>
+  <script src="../scripts/utils.js"></script>
+  <script src="../scripts/marketplace.js"></script>
+</body>
+</html>
