@@ -101,7 +101,21 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
 
   } catch (error) {
     console.error('Signup error:', error);
-    showMessage('signupMsg', API.getErrorMessage(error), 'error');
+    
+    // Enhanced error messages for common issues
+    let errorMessage = API.getErrorMessage(error);
+    
+    // Make duplicate email error more explicit
+    if (error.status === 409 || error.message.includes('already')) {
+      errorMessage = '⚠️ This email address is already registered. Please use a different email or try logging in.';
+    }
+    
+    // Handle validation errors
+    if (error.status === 400 && error.message.includes('Phone')) {
+      errorMessage = '⚠️ ' + errorMessage;
+    }
+    
+    showMessage('signupMsg', errorMessage, 'error');
     submitBtn.disabled = false;
     submitBtn.textContent = 'Create Account';
   }

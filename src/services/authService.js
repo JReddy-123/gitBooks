@@ -28,9 +28,22 @@ export async function signUp({ email, password, firstName, lastName, phone }) {
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
       if (error.code === 'P2002') {
-        const err = new Error('Email already in use');
-        err.status = 409;
-        throw err;
+        // Check which field caused the unique constraint violation
+        const field = error.meta?.target?.[0];
+        
+        if (field === 'email') {
+          const err = new Error('Email already in use');
+          err.status = 409;
+          throw err;
+        } else if (field === 'phone') {
+          const err = new Error('Phone number already in use');
+          err.status = 409;
+          throw err;
+        } else {
+          const err = new Error('This information is already registered');
+          err.status = 409;
+          throw err;
+        }
       }
     }
     throw error;
